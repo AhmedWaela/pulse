@@ -18,6 +18,7 @@ class Pulse extends StatelessWidget {
       "news",
     );
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
   }
 
   @override
