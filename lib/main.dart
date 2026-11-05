@@ -6,19 +6,26 @@ import 'package:pulse/firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const Pulse());
+  runApp(Pulse());
 }
 
 class Pulse extends StatelessWidget {
-  const Pulse({super.key});
+  Pulse({super.key});
 
-  Future<void> getNews() async {
+  List<Map<String, dynamic>> news = [];
+
+  Future<List<Map<String, dynamic>>> getNews() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference<Map<String, dynamic>> collection = db.collection(
       "news",
     );
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
     List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
+    for (var doc in docs) {
+      Map<String, dynamic> data = doc.data();
+      news.add(data);
+    }
+    return news;
   }
 
   @override
