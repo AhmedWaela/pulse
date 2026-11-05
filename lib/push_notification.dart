@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:pulse/local_notification.dart';
 
 class PushNotification {
   static FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -27,5 +28,15 @@ class PushNotification {
   static Future<String?> getDeviceToken() async {
     String? token = await _messaging.getToken();
     return token;
+  }
+
+  static Future<void> init() async {
+    FirebaseMessaging.onMessage.listen((event) {
+      LocalNotification.sendNotification(
+        event.notification.hashCode,
+        event.notification?.title,
+        event.notification?.body,
+      );
+    });
   }
 }
