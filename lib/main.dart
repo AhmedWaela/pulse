@@ -17,6 +17,7 @@ class Pulse extends StatelessWidget {
     CollectionReference<Map<String, dynamic>> collection = db.collection(
       "news",
     );
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
   }
 
   @override
