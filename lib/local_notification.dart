@@ -21,9 +21,15 @@ class LocalNotification {
     NotificationResponse details,
   ) {}
 
-  static Future<void> sendNotification(int id) async {
+  static Future<void> sendNotification(
+    int id,
+    String? title,
+    String? body,
+  ) async {
     await _plugin.show(
       id: id,
+      title: title,
+      body: body,
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           "news_id",
