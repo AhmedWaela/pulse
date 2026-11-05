@@ -14,6 +14,9 @@ class Pulse extends StatelessWidget {
 
   Future<void> getNews() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference<Map<String, dynamic>> collection = db.collection(
+      "news",
+    );
   }
 
   @override
