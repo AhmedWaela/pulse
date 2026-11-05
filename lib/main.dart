@@ -10,11 +10,10 @@ Future<void> main() async {
 
 class Pulse extends StatelessWidget {
   const Pulse({super.key});
+
+  Future<void> getNews() async {}
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: Scaffold());
   }
 }
