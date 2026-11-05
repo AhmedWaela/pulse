@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart';
 import 'package:pulse/local_notification.dart';
+import 'package:pulse/server_key.dart';
 
 class PushNotification {
   static FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -38,5 +42,32 @@ class PushNotification {
         event.notification?.body,
       );
     });
+  }
+
+  static Future<void> sendPushNotification(
+    String token,
+    String title,
+    String body,
+  ) async {
+    final serverKey = await ServerKey.getServerKey();
+    final url =
+        'https://fcm.googleapis.com/v1/projects/pulse-9a153/messages:send';
+    var headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $serverKey",
+    };
+
+    var message = {
+      "message": {
+        "token": token,
+        "notification": {"title": title, "body": body},
+      },
+    };
+
+    var response = await post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(message),
+    );
   }
 }
