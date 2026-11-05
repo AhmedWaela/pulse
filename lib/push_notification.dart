@@ -23,4 +23,9 @@ class PushNotification {
       print("user denied permision");
     }
   }
+
+  static Future<String?> getDeviceToken() async {
+    String? token = await _messaging.getToken();
+    return token;
+  }
 }
