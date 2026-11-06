@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse/news_details.dart';
 import 'package:pulse/news_item.dart';
+import 'package:pulse/news_model.dart';
 
 class NewsView extends StatelessWidget {
   const NewsView({super.key});
@@ -36,10 +38,22 @@ class NewsView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final data = docs[index].data();
 
-                return NewsItem(
-                  image: data['image'] ?? '',
-                  title: data['title'] ?? '',
-                  description: data['description'] ?? '',
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return NewsDetails(news: NewsModel.fromJson(data));
+                        },
+                      ),
+                    );
+                  },
+                  child: NewsItem(
+                    image: data['image'] ?? '',
+                    title: data['title'] ?? '',
+                    description: data['description'] ?? '',
+                  ),
                 );
               },
             );

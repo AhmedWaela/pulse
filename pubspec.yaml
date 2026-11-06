@@ -74,7 +74,14 @@ flutter:
         - asset: assets/fonts/LiberationSerif-Bold.ttf
     - family: Inter
       fonts:
-        - asset: assets\fonts\Inter_28pt-Regular.ttf
+        - asset: assets/fonts/Inter_28pt-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter_28pt-Medium.ttf
+          weight: 500
+    - family: Newsreader
+      fonts:
+        - asset: assets/fonts/Newsreader_36pt-Bold.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
