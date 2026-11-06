@@ -8,7 +8,6 @@ class NewsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('NewsDaily')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -28,7 +27,11 @@ class NewsView extends StatelessWidget {
               return const Center(child: Text('No news available'));
             }
 
-            return ListView.builder(
+            return ListView.separated(
+              physics: BouncingScrollPhysics(),
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 24);
+              },
               itemCount: docs.length,
               itemBuilder: (context, index) {
                 final data = docs[index].data();
