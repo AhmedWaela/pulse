@@ -1,1 +1,3 @@
-class NewsModel {}
+class NewsModel {
+  const NewsModel();
+}
