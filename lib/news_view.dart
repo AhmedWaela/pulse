@@ -44,7 +44,9 @@ class NewsView extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return NewsDetails(news: NewsModel.fromJson(data));
+                          return NewsDetails(
+                            news: NewsModel.fromJson(data, docs[index].id),
+                          );
                         },
                       ),
                     );

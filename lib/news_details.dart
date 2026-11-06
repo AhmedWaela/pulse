@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pulse/news_model.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NewsDetails extends StatelessWidget {
   const NewsDetails({super.key, required this.news});
@@ -32,7 +33,16 @@ class NewsDetails extends StatelessWidget {
               Spacer(),
               Row(
                 children: [
-                  TextButton(onPressed: () {}, child: Text('Share')),
+                  TextButton(
+                    onPressed: () async {
+                      await SharePlus.instance.share(
+                        ShareParams(
+                          text: "https://pulse-9a153.web.app/news/${news.id}",
+                        ),
+                      );
+                    },
+                    child: Text('Share'),
+                  ),
                   TextButton(onPressed: () {}, child: Text('Save')),
                 ],
               ),

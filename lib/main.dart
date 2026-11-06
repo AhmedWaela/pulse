@@ -1,57 +1,78 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:pulse/firebase_options.dart';
 import 'package:pulse/local_notification.dart';
+import 'package:pulse/news_details.dart';
+import 'package:pulse/news_model.dart';
 import 'package:pulse/news_view.dart';
 import 'package:pulse/push_notification.dart';
-import 'package:pulse/server_key.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await LocalNotification.init();
   await PushNotification.init();
-  runApp(Pulse());
+
+  runApp(const Pulse());
 }
 
-class Pulse extends StatefulWidget {
-  Pulse({super.key});
-
-  @override
-  State<Pulse> createState() => _PulseState();
-}
-
-class _PulseState extends State<Pulse> {
-  List<Map<String, dynamic>> news = [];
-
-  Future<List<Map<String, dynamic>>> getNews() async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    CollectionReference<Map<String, dynamic>> collection = db.collection(
-      "news",
-    );
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await collection.get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = querySnapshot.docs;
-    for (var doc in docs) {
-      Map<String, dynamic> data = doc.data();
-      news.add(data);
-    }
-    setState(() {});
-    return news;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getNews();
-  }
+class Pulse extends StatelessWidget {
+  const Pulse({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: NewsView(),
+
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+
+      home: const NewsView(),
+
+      onGenerateRoute: (settings) {
+        final uri = Uri.parse(settings.name ?? '');
+
+        if (uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'news') {
+          final newsId = uri.pathSegments[1];
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('news')
+                    .doc(newsId)
+                    .get(),
+
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  if (!snapshot.hasData || !snapshot.data!.exists) {
+                    return const Scaffold(
+                      body: Center(child: Text('News not found')),
+                    );
+                  }
+
+                  final news = NewsModel.fromJson(
+                    snapshot.data!.data()!,
+                    newsId,
+                  );
+
+                  return NewsDetails(news: news);
+                },
+              );
+            },
+          );
+        }
+
+        return null;
+      },
     );
   }
 }
