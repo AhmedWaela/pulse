@@ -6,7 +6,7 @@ import 'package:pulse/local_notification.dart';
 import 'package:pulse/server_key.dart';
 
 class PushNotification {
-  static FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   static Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await _messaging.requestPermission(
@@ -30,7 +30,11 @@ class PushNotification {
   }
 
   static Future<String?> getDeviceToken() async {
-    String? token = await _messaging.getToken();
+    String? token;
+    _messaging.onRegistered.listen((event) {
+      token = event;
+    });
+    await _messaging.register();
     return token;
   }
 
