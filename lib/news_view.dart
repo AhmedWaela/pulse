@@ -1,15 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse/news_item.dart';
 
-class NewsView extends StatefulWidget {
-  const new({super.key});
+class NewsView extends StatelessWidget {
+  const NewsView({super.key});
 
-  @override
-  State<NewsView> createState() => _NewsViewState();
-}
-
-class _NewsViewState extends State<NewsView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: const Text('NewsDaily')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance.collection('news').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(child: Text('Something went wrong'));
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final docs = snapshot.data?.docs ?? [];
+
+            if (docs.isEmpty) {
+              return const Center(child: Text('No news available'));
+            }
+
+            return ListView.builder(
+              itemCount: docs.length,
+              itemBuilder: (context, index) {
+                final data = docs[index].data();
+
+                return NewsItem(
+                  image: data['image'] ?? '',
+                  title: data['title'] ?? '',
+                  description: data['description'] ?? '',
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 }

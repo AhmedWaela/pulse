@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pulse/firebase_options.dart';
 import 'package:pulse/local_notification.dart';
+import 'package:pulse/news_view.dart';
 import 'package:pulse/push_notification.dart';
 import 'package:pulse/server_key.dart';
 
@@ -50,18 +51,7 @@ class _PulseState extends State<Pulse> {
     return MaterialApp(
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final token = await PushNotification.getDeviceToken();
-            await PushNotification.sendPushNotification(
-              token ?? "",
-              "Hello",
-              "Mohammed",
-            );
-          },
-        ),
-      ),
+      home: NewsView(),
     );
   }
 }
